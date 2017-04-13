@@ -1,0 +1,22 @@
+{
+  "name": "RenderReact",
+  "version": "2.1.0",
+  "description": "",
+  "scripts": {
+    "tsc:watch": "tsc -w",
+    "serve": "nodemon --debug --watch dist/ -d 1 ./dist/main.js",
+    "debug": "node-inspector",
+    "test": "mocha dist/test",
+    "tsc" : "tsc"
+  },
+  "author": "jackson.sunny.rodrigues@gmail.com",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "node-inspector": "^0.12.8",
+    "nodemon": "^1.9.2",
+    "typescript": "2.1.4",
+    "@types/node": "6.0.52"
+  }
+}
