@@ -10,13 +10,19 @@ const server = http.createServer((req, res) => {
 server.listen(PORT, () => {
   console.log(`server listening on port ${PORT}`);
 
-  let classDef = RClass.$def('MyApplication', 'React', 
-    RMethod.$def('render', [],undefined,'return "Hello"'),
-    '\n',
-    RMethod.$def('listner', 
-                  [{name:'event', type:'string'}, 
-                  RVariables.$def('args',undefined,'1'),
-                  RVariables.$optional('params','string')],
-                  'string'))
+  let classDef =
+    RClass.$def('MyApplication', 'React',
+      RMethod.$def('render', [], undefined, 'return "Hello"'),
+      RMethod.$def('listner',
+        [
+          { name: 'event', type: 'string' },
+          RVariables.$def('args', undefined, '1'),
+          RVariables.$optional('params', 'string')
+        ],
+        'string',
+        RVariables.$let('index','number','10'),
+        'return "How are you"'
+      )
+    )
   console.log(classDef);
 });

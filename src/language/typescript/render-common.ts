@@ -1,9 +1,14 @@
-namespace R {
-    export const tab = '\t'    
+export namespace R {
+    export const tab = '\t'
+    export const newLine = '\n'
     
     interface ParamConfig {
         name:string,
         type:string
+    }
+
+    export function indentRight(code:string):string {
+        return code.replace(/^/gm, `${R.tab}`);
     }
 
     export function $parameters(params:any[]): string[] {
@@ -52,30 +57,33 @@ export namespace RVariables {
 export namespace RFunction {
 
     export function $def(name: string, params: any[], returnType?:string, ...statements:string[]): string {
-        let content = statements ? `${statements.join('\n').replace('\n',`\n+${R.tab}`)}` : ''
+        let content = statements ? `${statements.join('\n')}` : ''
         let returnObj = returnType? `: ${returnType}`: ''
         return [`function ${name}(${R.$parameters(params).join(', ')})${returnObj} {`,
-                `${R.tab}${content}`,
-                `}`]
+                `${R.indentRight(content)}`,
+                `}`,
+                ' ']
                 .join('\n')
     }
 
     export function $arrow(params: any[], returnType?:string, ...statements:string[]): string {
         let returnObj = returnType? `: ${returnType}`: ''
-        let content = statements ? `${statements.join('\n').replace('\n',`\n+${R.tab}`)}` : ''
+        let content = statements ? `${statements.join('\n')}` : ''
         if (statements.length == 1) return `(${R.$parameters(params).join(' ,')}) => ${statements[0]}`
         return [`( ${R.$parameters(params).join(', ')} )${returnObj} => {`,
-                `${R.tab}${content}`,
-                `}`]
+                `${R.indentRight(content)}`,
+                `}`,
+                ' ']
                 .join('\n')
     }
 
     export function $anonymus(params: any[], returnType?:string, ...statements:string[]): string {
         let returnObj = returnType? `: ${returnType}`: ''
-        let content = statements ? `${statements.join('\n').replace('\n',`\n+${R.tab}`)}` : ''
+        let content = statements ? `${statements.join('\n')}` : ''
         return [`function (${R.$parameters(params).join(', ')})${returnObj} {`,
-                `${R.tab}${content}`,
-                `}`]
+                `${R.indentRight(content)}`,
+                `}`,
+                ' ']
                 .join('\n')
     }
 
@@ -84,10 +92,11 @@ export namespace RFunction {
 export namespace RMethod {
     export function $def(name: string, params: any[], returnType?:string, ...statements:string[]): string {
         let returnObj = returnType? `: ${returnType}`: ''
-        let content = statements ? `${statements.join('\n').replace('\n',`\n+${R.tab}`)}` : ''
+        let content = statements ? `${statements.join('\n')}` : ''
         return [`${name}(${R.$parameters(params).join(', ')})${returnObj} {`,
-                `${R.tab}${content}`,
-                `}`]
+                `${R.indentRight(content)}`,
+                `}`,
+                '']
                 .join('\n')
     }
 }
@@ -97,10 +106,12 @@ export namespace RClass {
 
     export function $def(name: string,superClass: string, ...statements:string[]): string {
         let extendClass = superClass ? `extends ${superClass}` : ''
-        let content = statements ? `${statements.join('\n').replace('\n',`\n+${R.tab}`)}` : ''
+        let content = statements ? `${statements.join('\n')}` : ''
         return [`class ${name} ${extendClass} {`,
-                `${R.tab}${content}`,
-                `}`]
+                '',
+                `${R.indentRight(content)}`,
+                `}`,
+                '']
                 .join('\n')
     }
 }
