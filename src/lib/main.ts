@@ -1,7 +1,7 @@
 'use strict';
 import * as http from 'http';
 import PORT from './config';
-import { R, RFunction, RClass, RMethod, RVariables, RIterator } from '../language/typescript'
+import { R, RFunction, RClass, RMethod, RVariables, RIterator, RImport} from '../language/typescript'
 
 const server = http.createServer((req, res) => {
   res.end('hello!');
@@ -14,6 +14,8 @@ server.listen(PORT, () => {
 
 function logCode() {
   let classDef =
+  R.$file(
+    RImport.$def(['React', 'React-DOM'], 'React'),
     RClass.$def('MyApplication', 'React',
       R.$public(RVariables.$def('instance','number')),
       R.$private(RVariables.$def('props','string')),
@@ -29,12 +31,14 @@ function logCode() {
         'string',                                     // RETRUN TYPE
         RVariables.$let('index', 'number', '10'),     // CODE
         RIterator.$map('params', undefined, [{ name: 'event', type: 'string' }],
-          "let append = 'New'",
+          "let append = 'New :'",
           "return append + event"
         ),
         'return params.join(" ,")'                    // CODE end
       )
     )
+  )
+    
   console.log(classDef);
 }
 

@@ -7,11 +7,23 @@ export namespace R {
         type:string
     }
 
+    export function $file(...statements:string[]): string {
+        return statements.join('\n\n')
+    }
+
     export function indentRight(code:string):string {
         return code.replace(/^/gm, `${R.tab}`);
     }
 
-    export function $parameters(params:any[]): string[] {
+    export function $block(...statements:string[]):string {
+        let content = statements ? `${statements.join('\n')}` : ''
+        return [`{`,
+                `${R.indentRight(content)}`,
+                `}`
+               ].join('\n')
+    }
+
+    export function $parameters(params:any[]): string {
         return params.map(param => {
             if (typeof param === 'string') {
                 return (param as string);
@@ -19,6 +31,7 @@ export namespace R {
             let parameter:ParamConfig = param as ParamConfig;
             return `${parameter.name}: ${parameter.type}`
         })
+        .join(' ,')
     }
 
     export function $export(statement:string): string {
@@ -39,6 +52,10 @@ export namespace R {
 
     export function $protected(statement:string): string {
         return `protected ${statement}`
+    }
+
+    export function $namespace(name:string, ...statements:string[]) {
+        return `namespace ${name} ${R.$block(...statements)}`
     }
 
 }
@@ -77,31 +94,22 @@ export namespace RVariables {
 export namespace RFunction {
 
     export function $def(name: string, params: any[], returnType?:string, ...statements:string[]): string {
-        let content = statements ? `${statements.join('\n')}` : ''
         let returnObj = returnType? `: ${returnType}`: ''
-        return [`function ${name}(${R.$parameters(params).join(', ')})${returnObj} {`,
-                `${R.indentRight(content)}`,
-                `}`,
+        return [`function ${name}(${R.$parameters(params)})${returnObj}  ${R.$block(...statements)}`,
                 ' ']
                 .join('\n')
     }
 
     export function $arrow(params: any[], returnType?:string, ...statements:string[]): string {
         let returnObj = returnType? `: ${returnType}`: ''
-        let content = statements ? `${statements.join('\n')}` : ''
-        if (statements.length == 1) return `(${R.$parameters(params).join(' ,')}) => ${statements[0]}`
-        return [`( ${R.$parameters(params).join(', ')} )${returnObj} => {`,
-                `${R.indentRight(content)}`,
-                `}`]
+        if (statements.length == 1) return `(${R.$parameters(params)}) => ${statements[0]}`
+        return [`( ${R.$parameters(params)} )${returnObj} =>  ${R.$block(...statements)}`]
                 .join('\n')
     }
 
     export function $anonymus(params: any[], returnType?:string, ...statements:string[]): string {
         let returnObj = returnType? `: ${returnType}`: ''
-        let content = statements ? `${statements.join('\n')}` : ''
-        return [`function (${R.$parameters(params).join(', ')})${returnObj} {`,
-                `${R.indentRight(content)}`,
-                `}`,
+        return [`function (${R.$parameters(params)})${returnObj}  ${R.$block(...statements)}`,
                 ' ']
                 .join('\n')
     }
@@ -111,10 +119,7 @@ export namespace RFunction {
 export namespace RMethod {
     export function $def(name: string, params: any[], returnType?:string, ...statements:string[]): string {
         let returnObj = returnType? `: ${returnType}`: ''
-        let content = statements ? `${statements.join('\n')}` : ''
-        return [`${name}(${R.$parameters(params).join(', ')})${returnObj} {`,
-                `${R.indentRight(content)}`,
-                `}`,
+        return [`${name}(${R.$parameters(params)})${returnObj} ${R.$block(...statements)}`,
                 '']
                 .join('\n')
     }
@@ -125,12 +130,14 @@ export namespace RClass {
 
     export function $def(name: string,superClass: string, ...statements:string[]): string {
         let extendClass = superClass ? `extends ${superClass}` : ''
-        let content = statements ? `${statements.join('\n')}` : ''
-        return [`class ${name} ${extendClass} {`,
-                '',
-                `${R.indentRight(content)}`,
-                `}`,
+        return [`class ${name} ${extendClass} ${R.$block(...statements)}`,
                 '']
                 .join('\n')
+    }
+}
+
+export namespace RImport {
+    export function $def(imports:string[], path:string) {
+        return `import { ${R.$parameters(imports)}} from '${path}'`
     }
 }
