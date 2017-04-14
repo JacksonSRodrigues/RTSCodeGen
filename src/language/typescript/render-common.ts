@@ -1,29 +1,31 @@
 export namespace R {
+
     export const tab = '\t'
-    export const newLine = '\n'
-    
-    interface ParamConfig {
-        name:string,
-        type:string
-    }
 
     export function $file(...statements:string[]): string {
         return statements.join('\n\n')
     }
 
-    export function indentRight(code:string):string {
+    export function $indentRight(code:string):string {
         return code.replace(/^/gm, `${R.tab}`);
     }
 
     export function $block(...statements:string[]):string {
         let content = statements ? `${statements.join('\n')}` : ''
         return [`{`,
-                `${R.indentRight(content)}`,
+                `${R.$indentRight(content)}`,
                 `}`
                ].join('\n')
     }
 
+    interface ParamConfig {
+        name:string,
+        type:string
+    }
+
     export function $parameters(params:any[]): string {
+        if (!params) return ''
+        
         return params.map(param => {
             if (typeof param === 'string') {
                 return (param as string);
@@ -58,6 +60,17 @@ export namespace R {
         return `namespace ${name} ${R.$block(...statements)}`
     }
 
+}
+
+export namespace RTypes {
+    export const $String = 'string'
+    export const $Number = 'number'
+    export const $Boolean = 'boolean'
+    export const $Array = 'Array'
+    export const $Any = 'any'
+    export const $Void = 'void'
+    export const $Null = 'null'
+    export const $Undefined = 'undefined'
 }
 
 
@@ -122,6 +135,10 @@ export namespace RMethod {
         return [`${name}(${R.$parameters(params)})${returnObj} ${R.$block(...statements)}`,
                 '']
                 .join('\n')
+    }
+
+    export function $call(object:string,...params:any[]): string {
+        return `${object}(${R.$parameters(params)})`
     }
 }
 

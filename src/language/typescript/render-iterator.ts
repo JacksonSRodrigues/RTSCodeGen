@@ -18,7 +18,7 @@ export namespace RIterator {
         function $(expression: string, ...statements: string[]): string {
             let content = statements ? `${statements.join('\n')}` : ''
             return [`for (${expression}) {`,
-            `${R.indentRight(content)}`,
+            `${R.$indentRight(content)}`,
                 `}`].join('\n')
         }
 

@@ -1,7 +1,7 @@
 'use strict';
 import * as http from 'http';
 import PORT from './config';
-import { R, RFunction, RClass, RMethod, RVariables, RIterator, RImport} from '../language/typescript'
+import { R, RTypes, RFunction, RClass, RMethod, RVariables, RIterator, RImport, RTSX} from '../language/typescript'
 
 const server = http.createServer((req, res) => {
   res.end('hello!');
@@ -18,29 +18,36 @@ function logCode() {
       RImport.$as('React', 'react'),     // IMPORTS
       RImport.$as('ReactDOM', 'react-dom'),
 
-      RClass.$def('MyApplication', 'React.Component',     // NAME , SUPER CLASS & below are its STATEMENTS
+      RClass.$def('Application', 'React.Component',     // NAME , SUPER CLASS & below are its STATEMENTS
 
-        R.$public(RVariables.$def('instance', 'number')),   // PROPTERTIES
-        R.$private(RVariables.$def('props', 'string')),
+        R.$public(RVariables.$def('instance', RTypes.$Number)),   // PROPTERTIES
+        R.$private(RVariables.$def('props', RTypes.$String)),
         R.$protected(RVariables.$def('state', 'Model')),    // PROPERTIES end
-        '',
-        RMethod.$def('render', [], undefined,               // NAME, PARAMS, RETRUN TYPE,
-         'return "Hello, how are you"'),                    // STATEMENTS
-
+        '',                    
         RMethod.$def('listner',                             // NAME
           [                                                 // PARAMS
             { name: 'event', type: 'string' },
             RVariables.$def('args', undefined, '1'),
-            RVariables.$optional('params', 'string[]')
+            RVariables.$optional('params', `${RTypes.$String}[]`)
           ],                                                // PARAMS end
           'string',                                         // RETRUN TYPE
-          RVariables.$let('index', 'number', '10'),         // STATEMENTS
-          RIterator.$map('params', undefined, [{ name: 'event', type: 'string' }],
-            "let append = 'New :'",
+          RVariables.$let('index',  RTypes.$Number, '10'),         // STATEMENTS
+          RIterator.$map('params', undefined, [{ name: 'event', type:  RTypes.$String }],
+            "let append = 'New ::'",
             "return append + event"
           ),
           'return params.join(" ,")'                        // STATEMENTS end
-        )
+        ),
+        
+        RMethod.$def('render', [], undefined,               // NAME, PARAMS, RETRUN TYPE,
+         `return (`,  // STATEMENTS
+           RTSX.$def('div',[{name:"className",value:'Application'}],
+                RTSX.$def('Header',[]),
+                RTSX.$def('Content',[]),
+                RTSX.$def('Footer',[])
+                ),
+          ')'
+         ),
       )
     )
     
