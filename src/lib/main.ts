@@ -23,7 +23,7 @@ function logCode() {
         R.$public(RVariables.$def('instance', RTypes.$Number)),   // PROPTERTIES
         R.$private(RVariables.$def('props', RTypes.$String)),
         R.$protected(RVariables.$def('state', 'Model')),    // PROPERTIES end
-        '',                    
+        '',
         RMethod.$def('listner',                             // NAME
           [                                                 // PARAMS
             { name: 'event', type: 'string' },
@@ -31,23 +31,23 @@ function logCode() {
             RVariables.$optional('params', `${RTypes.$String}[]`)
           ],                                                // PARAMS end
           'string',                                         // RETRUN TYPE
-          RVariables.$let('index',  RTypes.$Number, '10'),         // STATEMENTS
-          RIterator.$map('params', undefined, [{ name: 'event', type:  RTypes.$String }],
-            "let append = 'New ::'",
+          RVariables.$let('index', RTypes.$Number, '10'),         // STATEMENTS
+          RIterator.$map('params', undefined, [{ name: 'event', type: RTypes.$String }],
+            "let append = 'New :'",
             "return append + event"
           ),
           'return params.join(" ,")'                        // STATEMENTS end
         ),
-        
+
         RMethod.$def('render', [], undefined,               // NAME, PARAMS, RETRUN TYPE,
-         `return (`,  // STATEMENTS
-           RTSX.$def('div',[{name:"className",value:'Application'}],
-                RTSX.$def('Header',[]),
-                RTSX.$def('Content',[]),
-                RTSX.$def('Footer',[])
-                ),
+          `return (`,  // STATEMENTS
+          RTSX.$def('div', [{ name: "className", value: 'Application' }],
+            RTSX.$def('Header', []),
+            RTSX.$def('Content', []),
+            RTSX.$def('Footer', [])
+          ),
           ')'
-         ),
+        ),
       )
     )
     

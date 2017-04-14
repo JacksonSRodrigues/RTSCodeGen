@@ -1,4 +1,4 @@
-import {R} from './render-common'
+import {R} from './rts-common'
 
 function $expandProperties(props:any[]):string {
     let properties:string = ''

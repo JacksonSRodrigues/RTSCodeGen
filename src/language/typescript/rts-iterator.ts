@@ -1,4 +1,4 @@
-import { R, RFunction } from './render-common'
+import { R, RFunction } from './rts-common'
 export namespace RIterator {
 
     export namespace RFor {
