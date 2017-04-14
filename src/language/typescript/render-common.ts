@@ -137,7 +137,11 @@ export namespace RClass {
 }
 
 export namespace RImport {
-    export function $def(imports:string[], path:string) {
+    export function $def(imports:string[], path:string): string {
         return `import { ${R.$parameters(imports)}} from '${path}'`
+    }
+
+    export function $as(newName:string, path:string): string {
+        return `import * as ${newName} from '${path}'`
     }
 }
