@@ -21,34 +21,54 @@ export namespace R {
         })
     }
 
+    export function $export(statement:string): string {
+        return `export ${statement}`
+    }
+
+    export function $static(statement:string): string {
+        return `static ${statement}`
+    }
+
+    export function $public(statement:string): string {
+        return `public ${statement}`
+    }
+
+    export function $private(statement:string): string {
+        return `private ${statement}`
+    }
+
+    export function $protected(statement:string): string {
+        return `protected ${statement}`
+    }
+
 }
 
 
 export namespace RVariables {
     export function $def(name: string, type?: string, ...expr: string[]): string {
-        return $create(name, '', type, expr);
+        return $create(name, '', type, ...expr);
     }
 
     export function $let(name: string, type?: string, ...expr: string[]): string {
-        return $create(name, 'let', type, expr);
+        return $create(name, 'let', type, ...expr);
     }
 
     export function $var(name: string, type?: string, ...expr: string[]): string {
-        return $create(name, 'var', type, expr);
+        return $create(name, 'var', type, ...expr);
     }
 
     export function $const(name: string, type?: string, ...expr: string[]): string {
-        return $create(name, 'const', type, expr);
+        return $create(name, 'const', type, ...expr);
     }
 
     export function $optional(name: string, type?: string, ...expr: string[]): string {
-        return $create(`${name}?`, '', type, expr.length>0?expr:undefined);
+        return $create(`${name}?`, '', type, ...expr);
     }
 
-    export function $create(name: string, decl?: string, type?: string, expr?: string[]): string {
+    function $create(name: string, decl?: string, type?: string, ...expr: string[]): string {
         let declaration = decl ? `${decl} ` : ''
         let variableType = type ? `: ${type}` : ''
-        let expression = expr ? `= ${expr.join('\n')}` : ''
+        let expression = (expr && expr.length>0) ? `= ${expr.join('\n')}` : ''
         return `${declaration} ${name}${variableType} ${expression}`
     }
 }
@@ -72,8 +92,7 @@ export namespace RFunction {
         if (statements.length == 1) return `(${R.$parameters(params).join(' ,')}) => ${statements[0]}`
         return [`( ${R.$parameters(params).join(', ')} )${returnObj} => {`,
                 `${R.indentRight(content)}`,
-                `}`,
-                ' ']
+                `}`]
                 .join('\n')
     }
 
