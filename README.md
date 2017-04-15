@@ -1,4 +1,4 @@
-# ReactRenderer
+# Typescript CodeGen
 A project written in Typescript to generate Typescript Code from Models/Entites
 
 ### Generted File
