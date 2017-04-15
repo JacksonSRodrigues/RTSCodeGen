@@ -21,7 +21,16 @@ export namespace RTSX {
 } 
 
 export namespace RDecorator {
-    export function $def(name:string) {
-        return `@${name}`
+    export function $call(name:string, hasBlock = false, ...args:any[]): string {
+        
+        let properties:string = `${R.$parameters(args).replace(' ,',', \r\n')}`;
+        if (hasBlock) {
+            properties = ['{',
+                            `${R.$indentRight(properties)}`,
+                          '}'].join('\n')
+        }
+
+        properties = args.length>0? `(${properties})`: ''
+        return `@${name}${properties}`
     }
 }

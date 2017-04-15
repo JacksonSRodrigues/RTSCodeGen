@@ -1,7 +1,7 @@
 'use strict';
 import * as http from 'http';
 import PORT from './config';
-import { R, RTypes, RFunction, RClass, RMethod, RVariables, RIterator, RImport, RTSX} from '../language/typescript'
+import { R, RTypes, RFunction, RClass, RMethod, RVariables, RIterator, RImport, RTSX, RDecorator, RComparison, RConditonal} from '../language/typescript'
 
 const server = http.createServer((req, res) => {
   res.end('hello!');
@@ -9,10 +9,76 @@ const server = http.createServer((req, res) => {
 
 server.listen(PORT, () => {
   console.log(`server listening on port ${PORT}`);
-  logCode()
+  logAngular2Code()
 });
 
-function logCode() {
+function logAngular2Code() {
+  let classDef =
+    R.$file(
+      RImport.$def(['Component'], 'angular2/core'),
+      RImport.$default('TodoStore', '../store/todostore'),
+      RImport.$default('TodoItem', '../todoitem/todoitem'),
+      RImport.$default('ItemUpdatedEvent', '../todoitem/itemupdatedevent'),
+      RImport.$def(['addItem', 'removeItem', 'updateItemText', 'updateItemCompletion'], '../store/actions'),
+
+      RDecorator.$call('Component', true,
+        { name: 'selector', type: "'todo-list'" },
+        { name: 'templateUrl', type: "'app/todolist/todolist.html'" },
+        { name: 'styleUrls', type: "['app/todolist/todolist.css']" },
+        { name: 'directives', type: '[TodoItem]' }
+      ),
+      R.$export(R.$default(
+        RClass.$def('TodoList', undefined,
+          RVariables.$def('newItem', undefined, 'test'),
+          RVariables.$def('store', undefined, 'TodoStore'),
+
+          RClass.$constructor([{ name: 'store', type: 'TodoStore' }], undefined,
+            RVariables.$assign(RClass.$ref('store'), 'store')
+          ),
+
+          RMethod.$def('addItem', [], undefined,
+            RMethod.$call(RClass.$ref('store.dispatch'),
+              RMethod.$call('addItem', RClass.$ref('newItem'))
+            ),
+            RVariables.$assign(RClass.$ref('newItem'), "''")
+          ),
+
+          RMethod.$def('removeItem', [{ name: 'itemId', type: RTypes.$String }], undefined,
+            RMethod.$call(
+              RClass.$ref('store.dispatch'),
+              RMethod.$call('removeItem', 'itemId')
+            )
+          ),
+
+          RMethod.$def('itemUpdated', [{ name: 'event', type: 'ItemUpdatedEvent' }], undefined,
+
+            RConditonal.$if(RComparison.$notEqualTo('event.text', undefined),
+
+              RConditonal.$if(RComparison.$equalTo('event.text', "''"),
+                RMethod.$call(RClass.$ref('store.dispatch'), RMethod.$call('removeItem', 'event.itemId'))
+              ),
+              RConditonal.$else(
+                RMethod.$call(RClass.$ref('store.dispatch'), RMethod.$call('updateItemText', 'event.itemId', 'event.text'))
+              )
+            ),
+
+            RConditonal.$if(RComparison.$notEqualTo('event.completed', 'undefined'),
+              RMethod.$call(RClass.$ref('store.dispatch'), RMethod.$call('updateItemCompletion', 'event.itemId', 'event.text'))
+            )
+          )
+        )
+      )
+      )
+    )
+    console.log(classDef)
+}
+
+
+
+
+
+
+function logReactCode() {
   let classDef =
     R.$file(
       RImport.$as('React', 'react'),     // IMPORTS
@@ -30,7 +96,7 @@ function logCode() {
             RVariables.$def('args', undefined, '1'),
             RVariables.$optional('params', `${RTypes.$String}[]`)
           ],                                                // PARAMS end
-          'string',                                         // RETRUN TYPE
+          RTypes.$String,                                         // RETRUN TYPE
           RVariables.$let('index', RTypes.$Number, '10'),         // STATEMENTS
           RIterator.$map('params', undefined, [{ name: 'event', type: RTypes.$String }],
             "let append = 'New :'",

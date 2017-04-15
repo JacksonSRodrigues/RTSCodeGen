@@ -40,6 +40,10 @@ export namespace R {
         return `export ${statement}`
     }
 
+    export function $default(statement:string): string {
+        return `default ${statement}`
+    }
+
     export function $static(statement:string): string {
         return `static ${statement}`
     }
@@ -95,6 +99,10 @@ export namespace RVariables {
         return $create(`${name}?`, '', type, ...expr);
     }
 
+    export function $assign(lhs:string,rhs:string) {
+        return $def(lhs,undefined,rhs);
+    }
+
     function $create(name: string, decl?: string, type?: string, ...expr: string[]): string {
         let declaration = decl ? `${decl} ` : ''
         let variableType = type ? `: ${type}` : ''
@@ -144,6 +152,13 @@ export namespace RMethod {
 
 
 export namespace RClass {
+    export function $ref(name:string) : string {
+        return `this.${name}`
+    }
+
+    export function $constructor(params: any[], returnType?:string, ...statements:string[]) : string {
+        return RMethod.$def('constructor',params , returnType, ...statements)
+    }
 
     export function $def(name: string,superClass: string, ...statements:string[]): string {
         let extendClass = superClass ? `extends ${superClass}` : ''
@@ -156,6 +171,10 @@ export namespace RClass {
 export namespace RImport {
     export function $def(imports:string[], path:string): string {
         return `import { ${R.$parameters(imports)}} from '${path}'`
+    }
+
+    export function $default(imports:string, path:string): string {
+        return `import ${R.$parameters([imports])} from '${path}'`
     }
 
     export function $as(newName:string, path:string): string {
