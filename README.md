@@ -1,5 +1,9 @@
-# ReactRenderer
+# Typescript CodeGen
 A project written in Typescript to generate Typescript Code from Models/Entites
+
+* [React](# React)
+* [Angular2](# Angular2)
+
 
 ## React
 ### Generted File
@@ -74,7 +78,8 @@ R.$file(
   )
 ```
 
-## Angular 2
+
+## Angular2
 ### Generated File
 ``` Typescript
 import { Component} from 'angular2/core'
