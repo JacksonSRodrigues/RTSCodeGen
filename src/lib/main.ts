@@ -1,7 +1,7 @@
 'use strict';
 import * as http from 'http';
 import PORT from './config';
-import { R, RTypes, RFunction, RClass, RMethod, RVariables, RIterator, RImport, RTSX, RDecorator, RComparison, RConditonal} from '../language/typescript'
+import { R, RTypes, RFunction, RClass, RMethod, RVariables, RProperties , RIterator, RImport, RTSX, RDecorator, RComparison, RConditonal} from '../language/swift'
 
 const server = http.createServer((req, res) => {
   res.end('hello!');
@@ -29,8 +29,9 @@ function logAngular2Code() {
       ),
       R.$export(R.$default(
         RClass.$def('TodoList', undefined,
-          RVariables.$def('newItem', undefined, 'test'),
-          RVariables.$def('store', undefined, 'TodoStore'),
+         
+          RProperties.$def('newItem', undefined, 'test'),
+          RProperties.$def('store', undefined, 'TodoStore'),
 
           RClass.$constructor([{ name: 'store', type: 'TodoStore' }], undefined,
             RVariables.$assign(RClass.$ref('store'), 'store')
@@ -38,16 +39,17 @@ function logAngular2Code() {
 
           RMethod.$def('addItem', [], undefined,
             RMethod.$call(RClass.$ref('store.dispatch'),
-              RMethod.$call('addItem', RClass.$ref('newItem'))
+              {name:'event', value: RMethod.$call('addItem',  {name:'event', value: RClass.$ref('newItem')})}
             ),
             RVariables.$assign(RClass.$ref('newItem'), "''")
           ),
 
           RMethod.$def('removeItem', [{ name: 'itemId', type: RTypes.$String }], undefined,
             RMethod.$call(
-              RClass.$ref('store.dispatch'),
-              RMethod.$call('removeItem', 'itemId')
-            )
+              RClass.$ref('store.dispatch'),  
+              { name:'item', value: 
+                RMethod.$call('removeItem',  {name:'id', value: 'itemId'})
+              })
           ),
 
           RMethod.$def('itemUpdated', [{ name: 'event', type: 'ItemUpdatedEvent' }], undefined,
@@ -55,15 +57,15 @@ function logAngular2Code() {
             RConditonal.$if(RComparison.$notEqualTo('event.text', undefined),
 
               RConditonal.$if(RComparison.$equalTo('event.text', "''"),
-                RMethod.$call(RClass.$ref('store.dispatch'), RMethod.$call('removeItem', 'event.itemId'))
+                RMethod.$call(RClass.$ref('store.dispatch'), {name:'event', value: RMethod.$call('removeItem', { name:'id', value:'event.itemId'}) })
               ),
               RConditonal.$else(
-                RMethod.$call(RClass.$ref('store.dispatch'), RMethod.$call('updateItemText', 'event.itemId', 'event.text'))
+                RMethod.$call(RClass.$ref('store.dispatch'),  {name:'event', value: RMethod.$call('updateItemText', { name:'id', value:'event.itemId'}, { name:'title', value:'event.text'}) })
               )
             ),
 
             RConditonal.$if(RComparison.$notEqualTo('event.completed', 'undefined'),
-              RMethod.$call(RClass.$ref('store.dispatch'), RMethod.$call('updateItemCompletion', 'event.itemId', 'event.text'))
+              RMethod.$call(RClass.$ref('store.dispatch'),  {name:'event', value: RMethod.$call('updateItemCompletion',  { name:'id', value:'event.itemId'},{ name:'title', value:'event.text'}) })
             )
           )
         )
