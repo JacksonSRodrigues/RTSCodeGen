@@ -6,17 +6,21 @@
     "tsc:watch": "tsc -w",
     "serve": "nodemon --debug --watch dist/ -d 1 ./dist/main.js",
     "debug": "node-inspector",
-    "test": "mocha dist/test",
-    "tsc" : "tsc"
+    "test": "mocha dist/test/**/*.spec.js",
+    "tsc": "tsc",
+    "test:watch": "concurrently \"npm run tsc:watch\"  \"npm run test -- --watch\""
   },
   "author": "jackson.sunny.rodrigues@gmail.com",
   "license": "ISC",
   "dependencies": {},
   "devDependencies": {
+    "@types/chai": "^3.5.1",
+    "@types/mocha": "^2.2.41",
+    "@types/node": "6.0.52",
     "chai": "^3.5.0",
+    "mocha": "^3.2.0",
     "node-inspector": "^0.12.8",
     "nodemon": "^1.9.2",
-    "typescript": "2.1.4",
-    "@types/node": "6.0.52"
+    "typescript": "2.1.4"
   }
 }
